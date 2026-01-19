@@ -20,6 +20,9 @@ pub enum SeedPayError {
     #[msg("Invalid payment check signature")]
     InvalidSignature,
 
+    #[msg("Missing or invalid Ed25519 verification instruction")]
+    MissingEd25519Instruction,
+
     #[msg("Invalid seeder token account owner")]
     InvalidSeederAccount,
 

@@ -2,8 +2,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{
     transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
 };
-use brine_ed25519::sig_verify;
 use sha2::{Digest, Sha256};
+use anchor_lang::solana_program::sysvar::instructions::get_instruction_relative;
 
 pub mod errors;
 pub mod events;
@@ -15,6 +15,15 @@ use state::{ChannelStatus, PaymentChannel};
 
 declare_id!("SEEDPAY111111111111111111111111111111111111");
 
+// Native Solana Ed25519 program ID
+const ED25519_PROGRAM_ID: anchor_lang::solana_program::pubkey::Pubkey = 
+    anchor_lang::solana_program::pubkey::Pubkey::new_from_array([
+        92, 178, 185, 144,  49, 200, 236, 184,
+        111,  79, 248, 246,  67, 135,  24, 227,
+        212,  62, 222,  48, 234, 128,  52,  45,
+        244, 101, 219, 146, 167,  27, 153,  59,
+    ]);
+
 #[program]
 pub mod seedpay_channel {
     use super::*;
@@ -25,7 +34,6 @@ pub mod seedpay_channel {
         timeout_seconds: i64,
         session_hash: [u8; 32],
     ) -> Result<()> {
-        // Input validation
         require!(timeout_seconds >= 3600, SeedPayError::TimeoutTooShort);
         require!(amount > 0, SeedPayError::DepositTooLow);
         require!(
@@ -79,7 +87,6 @@ pub mod seedpay_channel {
         nonce: u64,
         signature: [u8; 64],
     ) -> Result<()> {
-        // Get account infos before mutable borrow
         let channel_info = ctx.accounts.channel.to_account_info();
         let escrow_info = ctx.accounts.escrow.to_account_info();
         let mint_info = ctx.accounts.mint.to_account_info();
@@ -102,7 +109,12 @@ pub mod seedpay_channel {
 
         let message = create_payment_check_message(&channel.key(), amount, nonce);
         require!(
-            verify_ed25519_signature(&channel.leecher, &message, &signature),
+            verify_ed25519_signature_via_sysvar(
+                &ctx.accounts.instruction_sysvar,
+                &channel.leecher,
+                &message,
+                &signature
+            ),
             SeedPayError::InvalidSignature
         );
 
@@ -112,7 +124,7 @@ pub mod seedpay_channel {
         let session_hash = channel.session_hash;
         let channel_bump = channel.bump;
 
-        // Use channel PDA seeds for signing (escrow authority is the channel account)
+        // Channel PDA signs for escrow transfers
         let seeds = &[
             PaymentChannel::SEED_PREFIX,
             leecher.as_ref(),
@@ -163,7 +175,6 @@ pub mod seedpay_channel {
     }
 
     pub fn timeout_close(ctx: Context<TimeoutClose>) -> Result<()> {
-        // Get account infos before mutable borrow
         let channel_info = ctx.accounts.channel.to_account_info();
         let escrow_info = ctx.accounts.escrow.to_account_info();
         let mint_info = ctx.accounts.mint.to_account_info();
@@ -185,7 +196,7 @@ pub mod seedpay_channel {
         let session_hash = channel.session_hash;
         let channel_bump = channel.bump;
 
-        // Use channel PDA seeds for signing (escrow authority is the channel account)
+        // Channel PDA signs for escrow transfers
         let seeds = &[
             PaymentChannel::SEED_PREFIX,
             leecher.as_ref(),
@@ -308,6 +319,10 @@ pub struct CloseChannel<'info> {
 
     pub mint: InterfaceAccount<'info, Mint>,
     pub token_program: Interface<'info, TokenInterface>,
+    
+    /// CHECK: Instructions sysvar - Ed25519 verify instruction must precede this instruction
+    #[account(address = anchor_lang::solana_program::sysvar::instructions::ID)]
+    pub instruction_sysvar: UncheckedAccount<'info>,
 }
 
 #[derive(Accounts)]
@@ -357,18 +372,55 @@ fn create_payment_check_message(channel: &Pubkey, amount: u64, nonce: u64) -> Ve
     message
 }
 
-fn verify_ed25519_signature(pubkey: &Pubkey, message: &[u8], signature: &[u8; 64]) -> bool {
-    // Hash the message (protocol spec requires SHA-256)
+fn verify_ed25519_signature_via_sysvar(
+    instruction_sysvar: &AccountInfo,
+    pubkey: &Pubkey,
+    message: &[u8],
+    signature: &[u8; 64],
+) -> bool {
+    // Protocol requires SHA-256 hashing before Ed25519 verification
     let mut hasher = Sha256::new();
     hasher.update(message);
     let message_hash = hasher.finalize();
 
-    // Verify using brine-ed25519 (BPF-compatible crate for Solana)
-    // sig_verify(pubkey: &[u8; 32], sig: &[u8; 64], message: &[u8]) -> Result<(), SignatureError>
-    let pubkey_bytes: [u8; 32] = match pubkey.as_ref().try_into() {
-        Ok(bytes) => bytes,
+    let instruction = match get_instruction_relative(-1, instruction_sysvar) {
+        Ok(ix) => ix,
         Err(_) => return false,
     };
 
-    sig_verify(&pubkey_bytes, signature, &message_hash).is_ok()
+    if instruction.program_id != ED25519_PROGRAM_ID {
+        return false;
+    }
+
+    // Ed25519 instruction format: 16-byte header with offsets, then data
+    // Header: [num_sigs, padding, sig_offset, sig_ix_idx, pubkey_offset, pubkey_ix_idx, msg_offset, msg_size, msg_ix_idx]
+    let data = instruction.data.as_slice();
+    
+    if data.len() < 16 + 64 + 32 + 32 {
+        return false;
+    }
+
+    if data[0] != 1 {
+        return false;
+    }
+
+    let sig_offset = u16::from_le_bytes([data[2], data[3]]) as usize;
+    let pubkey_offset = u16::from_le_bytes([data[6], data[7]]) as usize;
+    let msg_offset = u16::from_le_bytes([data[10], data[11]]) as usize;
+    let msg_size = u16::from_le_bytes([data[12], data[13]]) as usize;
+
+    if sig_offset + 64 > data.len() 
+        || pubkey_offset + 32 > data.len() 
+        || msg_offset + msg_size > data.len() 
+    {
+        return false;
+    }
+
+    let ix_signature = &data[sig_offset..sig_offset + 64];
+    let ix_pubkey = &data[pubkey_offset..pubkey_offset + 32];
+    let ix_message = &data[msg_offset..msg_offset + msg_size];
+
+    ix_signature == signature.as_slice()
+        && ix_pubkey == pubkey.as_ref()
+        && ix_message == message_hash.as_slice()
 }
