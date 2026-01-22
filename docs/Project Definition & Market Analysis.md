@@ -55,11 +55,11 @@ The protocol demonstrates strong PMF by sitting at the intersection of 3 validat
 
 - It is widely considered a zombie product by community. Forums are full of users complaining with that they never receive payouts dispite seeding TBs of data. The integration with the TRON chain is clunky and centralized. The market wants this, but the current execution is untrustworthy.
 
-2. **Upfire**:
+2. **Upfire** [Found during Research]:
 
 - A previous attempt at crypto-incentivized torrenting. Its effectively dead (token price ~$0, no GitHub activity since 2022). It failed because it required a custom client and didn't solve the chicken-and-egg problem of liquidity.
 
-3. **Tribler**:
+3. **Tribler** [Found during Research]:
 
 - A privacy-focused academic project from Delft University. They have bandwidth token system, but it is research-grade, not commercial. Also it requires users running specialized clients with bandwidth overhead. It proves the tech works, but lack the go-to-market strategy.
 
@@ -67,7 +67,7 @@ The protocol demonstrates strong PMF by sitting at the intersection of 3 validat
 
 - Emphasis in retrieval from cold storage rather than real-time streaming or active swarming. Higher latency for initial bytes. More complex hardware requirements and operator incentives seen as barriers for on-demand enterprise use.
 
-5. Joystream/LBRY/Odysee
+5. **Joystream/LBRY/Odysee**:
 
 - Operate more as standalone platforms or ecosystems rather than light weight protocol-level middleware that can plug into existing BitTorrent flows.
 
