@@ -85,6 +85,18 @@ The protocol demonstrates strong PMF by sitting at the intersection of 3 validat
 - Diverse, High-value Target Markets
   - By targeting AI/ML model distribution, scientific datasets, blockcain node snapshots, and indie game patches, SeedPay can appeal to segments with substantial bandwidth needs and higher willingness to pay, leveraging Solana's low fees for micro-payments.
 
+### A-5 Founder-Market Fit (FMF)
+
+I am a self-taught blockchain developer with a unique background: 6 years designing robotic systems and 2 years in full stack development, now working in Solana infrastructure at BlockchainHQ.
+
+I built Testship (https://www.testship.xyz/), an interactive testing framework for Anchor programs that auto parses IDL structures and generates UIs. Same developer tooling skills required for SeedPay's BitTorrent extension integration and SDK development. Through hackathon projects like x402test (https://github.com/blockchain-hq/x402test), I explored HTTP based micropayments protocol inspired by Coinbase's x402, gaining direct experience with streaming payment veritification and channel management that translates to SeedPay's unidirectional payment channel architecture.
+
+My tech stack (Typescript, Rust, Anchor, ReactJs, NextJs, Solana) aligns perfectly with SeedPay's requirements. I am embedded in crypto-native communities through content creation, speaking engagements and open source contributions, giving me direct access to SeedPay's target users.
+
+What drives me is infra problems where existing solutions fail. I have encountered deal torrent problem while using BitTorrent network because volunteer seeders lack ecoomic incentives.
+
+My proven ability to ship developer tools (Testship's hot-reloading, PDA derivation, session sharing), payment protocol experience (x402test), systems engineering mindset (robotics), and deep solana ecosystem knowledge positions me to execute SeedPay from protocol specs through production implementation, and SDK development.
+
 ## References
 
 1. Visa. "Visa Expands Stablecoin Settlement Capabilities."https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.21951.html
