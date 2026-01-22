@@ -177,6 +177,8 @@ Crypto-native: By definition yes
 **Reflection**:
 I truely resonate with distribution and monetization of AI models, datasets and game patches. Indie game studios could use cheaper distribution networks. Also this could be used for cheaper data archival and pay for what you watch/cosume type of content via streaming too. This could be huge for chain snapshots as well. Node operators need to rely on adhoc shared snapshots for syncing currently.
 
+**Synthesized Paragraph**: Please refere [Part A, Section 3](#a-3-target-markets)
+
 ### B-4 Competitor Landscape
 
 **Prompt**:"Identify key competitors for a project with this value prop targeting these markets - AI/ML model and dataset distribution, Chain snapshot availabilty, software distribution, scientific data, crypto native creators and DAOs content distribution . What are potential weaknesses in their offerings?"
@@ -209,3 +211,5 @@ Weaknesses: These are "platforms" (YouTube alternatives) rather than "protocols.
 
 **Reflection**:
 Many solution have been tried for different problems but SeedPay has unique advantage due to plugging into existing BitTorrent protocol and utilizing p2p swarm network.
+
+**Synthesized Paragraph**: Please refer [Part A, Section 4](#a-4-competitor-landscape)
