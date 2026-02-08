@@ -34,3 +34,7 @@ Memo program attaches privacy-preserving session_hash to channel opening transac
 
 1. Predictable PDAs: channel state derived from seeds. Seeder can look it up without an index.
 2. Escrow Ownership: Escrow token account is owned by SeedPay program PDA, not by either user.
+
+## External Dependencies & Integrations
+
+![External Deps](./images/external-deps.png)
