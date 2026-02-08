@@ -17,3 +17,7 @@ _Seeders earn crypto for sharing files. Leechers pay for faster downloads._
   3. Data transfers via BitTorrent. Leecher sends signed-off payments checks as data is received.
   4. Seeder submits highest payment check to close channel, or Leecher force-recovers after timeout.
   5. ECDH ephemeral keys ensure on-chain payments can not be linked to download activity.
+
+## Program Structure & Instruction Flow
+
+![Program Structure & Instruction Flow](./images/program-structure.png)

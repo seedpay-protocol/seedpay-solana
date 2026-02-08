@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
   <diagram name="Page-1" id="Mj_bo_T9G0kWMVOXqtQg">
-    <mxGraphModel dx="1273" dy="834" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1357" dy="889" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -94,6 +94,113 @@
         </mxCell>
         <mxCell id="Da3WosQAlqIRKITS6ndL-27" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.001;entryY=0.553;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;" target="Da3WosQAlqIRKITS6ndL-13">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-28" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Program Structure &amp;amp; Instruction Flow&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="890" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-49" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="Da3WosQAlqIRKITS6ndL-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-50" connectable="0" parent="Da3WosQAlqIRKITS6ndL-49" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;CPI&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0601" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-59" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Da3WosQAlqIRKITS6ndL-58">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1350" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-60" connectable="0" parent="Da3WosQAlqIRKITS6ndL-59" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;attach_memo()&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0663" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#E1D5E7,#CC99FF);strokeColor=#9673a6;gradientColor=none;" value="" vertex="1">
+          <mxGeometry height="860" width="370" x="850" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-30" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 20px;&quot;&gt;Program&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="880" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;" value="" vertex="1">
+          <mxGeometry height="180" width="330" x="870" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 16px;&quot;&gt;open_channel&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="890" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Called by: Leecher&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Creates channel state PDA&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Transfers USDC to escrow account&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Attaches memo with session hash&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="290" x="880" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-35" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;" value="" vertex="1">
+          <mxGeometry height="180" width="330" x="870" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-36" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 16px;&quot;&gt;close_channel&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="890" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Called by: Seeder&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-size: 16px;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Verifies Ed25519 payment check signature&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); background-color: transparent;&quot;&gt;Transfers authorized amount to Seeder&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); background-color: transparent;&quot;&gt;Refunds remainder to Leecher&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="310" x="880" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-39" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;" value="" vertex="1">
+          <mxGeometry height="180" width="330" x="871" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-40" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 16px;&quot;&gt;timeout_close&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="891" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-41" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Called by: Leecher&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 16px;&quot;&gt;Verifies current time &amp;gt;&amp;nbsp; channel.timeout&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 16px;&quot;&gt;Refunds entire deposite to Leecher&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Marks channel as timed out&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="310" x="881" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Responsibilities:&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;channel lifecycle management&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;payment check signature verification&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;escrow fund management via CPI&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="310" x="870" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-47" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;SPL Token Program&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="190" width="260" x="1360" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-48" parent="Da3WosQAlqIRKITS6ndL-47" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;transfer(): Move USDC between accounts&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;close_account(): Close escrow, return rent&lt;br&gt;&lt;/span&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="260" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-51" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;System Program&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="190" width="260" x="1360" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-52" parent="Da3WosQAlqIRKITS6ndL-51" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;create_account(): Allocate channel PDA&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;transfer(): rent for rent-exempt accounts&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="260" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-55" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.015;entryY=0.433;entryDx=0;entryDy=0;entryPerimeter=0;" target="Da3WosQAlqIRKITS6ndL-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-56" connectable="0" parent="Da3WosQAlqIRKITS6ndL-55" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;CPI&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.1062" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-57" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;SPL Memo Program&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="190" width="260" x="1360" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-58" parent="Da3WosQAlqIRKITS6ndL-57" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Attach session_hash to channel transaction&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Privacy: No peer_id or IP on chain&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="260" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-61" parent="1" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Ed25519 SigVerify Precompile&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="120" width="260" x="1360" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-62" parent="Da3WosQAlqIRKITS6ndL-61" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;Verify payment check signatures on chain&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="260" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-63" edge="1" parent="Da3WosQAlqIRKITS6ndL-61" source="Da3WosQAlqIRKITS6ndL-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="Da3WosQAlqIRKITS6ndL-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-64" edge="1" parent="Da3WosQAlqIRKITS6ndL-61" source="Da3WosQAlqIRKITS6ndL-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="Da3WosQAlqIRKITS6ndL-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-65" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-29" style="endArrow=classic;html=1;rounded=0;exitX=1.001;exitY=0.913;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Da3WosQAlqIRKITS6ndL-62" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="1080" y="630" as="sourcePoint" />
+            <mxPoint x="1130" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-66" connectable="0" parent="Da3WosQAlqIRKITS6ndL-65" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;verify_signature()&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0332" y="-2" as="geometry">
+            <mxPoint x="-3" y="23" as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
