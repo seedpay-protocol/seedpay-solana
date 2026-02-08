@@ -41,6 +41,10 @@ Memo program attaches privacy-preserving session_hash to channel opening transac
 
 ## User Interaction Flow
 
+### Handshake & ECDH Key Exchange
+
+![exchange](./images/exchange.png)
+
 ### Open Channel (Deposit)
 
 ![open_channel](./images/open_channel.png)
@@ -63,7 +67,7 @@ Memo program attaches privacy-preserving session_hash to channel opening transac
 ![data-flow](./images/flow.png)
 
 **Cost Calculation**:
-cost = (bytes _ 1,048,576) _ price_per_mb
+cost = (bytes / 1,048,576) \_ price_per_mb
 Payment checks are off-chain (no RPC calls during transfer)
 
 On-chain cost: 2 transactions total (open + close)
