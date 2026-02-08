@@ -52,3 +52,19 @@ Memo program attaches privacy-preserving session_hash to channel opening transac
 ### Timeout Close
 
 ![timeout_close](./images/timeout_close.png)
+
+**Maximum Loss**:
+
+- Cooperative: Seeder gets exactly what Leecher authorized. Remainder refuneded. Both satisfied.
+- Timeout: Leecher recovers full deposit. Seeder earns $0. Default timeout: 24 h
+
+## Off-Chain Data Transfer & Payment Check Flow
+
+![data-flow](./images/flow.png)
+
+**Cost Calculation**:
+cost = (bytes _ 1,048,576) _ price_per_mb
+Payment checks are off-chain (no RPC calls during transfer)
+
+On-chain cost: 2 transactions total (open + close)
+Check frequency: every 10-100 MB

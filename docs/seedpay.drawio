@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
   <diagram name="Page-1" id="Mj_bo_T9G0kWMVOXqtQg">
-    <mxGraphModel dx="1357" dy="889" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1566" dy="1026" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -674,6 +674,167 @@
         </mxCell>
         <mxCell id="Da3WosQAlqIRKITS6ndL-239" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Solana&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Mark &#39;TimedOut&#39;, close accounts&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="630" x="94" y="3020" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-241" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;&amp;nbsp;Off-Chain Data Transfer &amp;amp; Payment Check Flow&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="871" y="2360" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-244" edge="1" parent="1" source="Da3WosQAlqIRKITS6ndL-242" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;dashed=1;dashPattern=8 8;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1089" y="3210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-242" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;align=center;fontColor=#ffffff;" value="&lt;span style=&quot;font-size: 16px;&quot;&gt;Leecher Client&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="990" y="2420" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-243" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;align=center;" value="&lt;span style=&quot;font-size: 16px;&quot;&gt;Seeder Client&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="200" x="1390" y="2420" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-245" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;dashed=1;dashPattern=8 8;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1489.778888888889" y="2480" as="sourcePoint" />
+            <mxPoint x="1490" y="3220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-246" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#b1ddf0;strokeColor=#10739e;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1100" y="2550" as="sourcePoint" />
+            <mxPoint x="1480" y="2550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-248" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="request (index, begin, length)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2520" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-249" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="2600" as="sourcePoint" />
+            <mxPoint x="1100" y="2600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-250" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="piece (index, begin, data)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2570" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-251" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#b1ddf0;strokeColor=#10739e;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1105" y="2650" as="sourcePoint" />
+            <mxPoint x="1485" y="2650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-252" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="request (more pieces...)" vertex="1">
+          <mxGeometry height="30" width="250" x="1175" y="2620" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-253" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="2699.17" as="sourcePoint" />
+            <mxPoint x="1100" y="2699.17" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-254" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="piece (more data...)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2669.17" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-255" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" value="&lt;font&gt;Seeder checks: cumulative_cost &amp;gt; last_check_amount?&lt;/font&gt;" vertex="1">
+          <mxGeometry height="20" width="319" x="1135.5" y="2720" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-256" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="2780" as="sourcePoint" />
+            <mxPoint x="1100" y="2780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-257" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="payment_check_required" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2750" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-258" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#b1ddf0;strokeColor=#10739e;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1100" y="2829.17" as="sourcePoint" />
+            <mxPoint x="1480" y="2829.17" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-259" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="payment_check (amount, nonce, sig)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2799.17" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-260" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" value="&lt;font&gt;Seeder validates: signature, nonce, amount&lt;/font&gt;" vertex="1">
+          <mxGeometry height="20" width="319" x="1135.5" y="2850" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-261" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="2916" as="sourcePoint" />
+            <mxPoint x="1100" y="2916" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-262" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Unchoke / continue serving" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2886" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-263" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#b1ddf0;strokeColor=#10739e;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1100" y="2960" as="sourcePoint" />
+            <mxPoint x="1480" y="2960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-264" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="request (more pieces...)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2930" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-265" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="3000" as="sourcePoint" />
+            <mxPoint x="1100" y="3000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-266" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="piece (final pieces...)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="2970" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-267" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#b1ddf0;strokeColor=#10739e;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1100" y="3050" as="sourcePoint" />
+            <mxPoint x="1480" y="3050" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-268" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="payment_check (final amount, nonce, sig)" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="3020" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-269" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;" value="&lt;font&gt;Download complete&lt;/font&gt;" vertex="1">
+          <mxGeometry height="20" width="319" x="1135.5" y="3070" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-270" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;fillColor=#ffcd28;strokeColor=#d79b00;gradientColor=#ffa500;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1480" y="3140" as="sourcePoint" />
+            <mxPoint x="1100" y="3140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-271" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="close_channel tx on Solana" vertex="1">
+          <mxGeometry height="30" width="250" x="1170" y="3110" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-272" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="BT wire: request piece" vertex="1">
+          <mxGeometry height="30" width="140" x="930" y="2540" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-273" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Continue requesting" vertex="1">
+          <mxGeometry height="30" width="140" x="930" y="2630" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-274" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Leecher signs check" vertex="1">
+          <mxGeometry height="30" width="140" x="930" y="2810" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-275" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Download continues" vertex="1">
+          <mxGeometry height="30" width="140" x="930" y="2950" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-276" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Final payment check" vertex="1">
+          <mxGeometry height="30" width="140" x="930" y="3035" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-277" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="BT wire: send piece" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="2580" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-278" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Continue sending" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="2680" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-279" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Needs payment update" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="2760" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-280" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Payment verified" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="2900" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-281" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Nearing completion" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="2980" as="geometry" />
+        </mxCell>
+        <mxCell id="Da3WosQAlqIRKITS6ndL-282" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Seeder claims on-chain" vertex="1">
+          <mxGeometry height="30" width="140" x="1500" y="3120" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
