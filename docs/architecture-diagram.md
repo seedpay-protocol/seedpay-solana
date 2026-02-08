@@ -21,3 +21,16 @@ _Seeders earn crypto for sharing files. Leechers pay for faster downloads._
 ## Program Structure & Instruction Flow
 
 ![Program Structure & Instruction Flow](./images/program-structure.png)
+
+**CPIs:**
+SeedPay never handles tokens directly. It invokes SPL Token via CPI. Ed25519 precomiple verifies payment check signatures.
+Memo program attaches privacy-preserving session_hash to channel opening transactions.
+
+## Account Structure & PDA
+
+![Account Structure & PDA](./images/account-structure.png)
+
+**Account Design Principles:**
+
+1. Predictable PDAs: channel state derived from seeds. Seeder can look it up without an index.
+2. Escrow Ownership: Escrow token account is owned by SeedPay program PDA, not by either user.
