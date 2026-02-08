@@ -38,3 +38,17 @@ Memo program attaches privacy-preserving session_hash to channel opening transac
 ## External Dependencies & Integrations
 
 ![External Deps](./images/external-deps.png)
+
+## User Interaction Flow
+
+### Open Channel (Deposit)
+
+![open_channel](./images/open_channel.png)
+
+### Close Channel (Cooperative)
+
+![close_channel](./images/close_channel.png)
+
+### Timeout Close
+
+![timeout_close](./images/timeout_close.png)
