@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[account]
+#[derive(InitSpace)]
 pub struct ChannelState {
     pub leecher: Pubkey, // wallet address of the leecher
     pub seeder: Pubkey, // wallet address of seeder
@@ -9,7 +10,7 @@ pub struct ChannelState {
     // unique channel identifier
     // derived from SHA-256(ECDH Session_UUID)
     // binding this on-chain channel to a specific peer session
-    channel_id: [u8; 32],
+    pub channel_id: [u8; 32],
 
     pub created_at: i64, // unix timestamp when the channel was created
     pub timeout: i64, // unix timestamp after which leecher can force-close
@@ -20,7 +21,7 @@ pub struct ChannelState {
     pub bump: u8, // PDA bump seed
 }
 
-#[derived(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace)]
 pub enum ChannelStatus {
     Open, // channel is active, funds locked in escrow
     Closed, // seeder claimed payment via close_channel

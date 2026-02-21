@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-seedpay_temp = "F4N3pehAbyRhvHWj62r5C5DMKMcwJj2ry6TdF5GzpBo6"
+seedpay = "F4N3pehAbyRhvHWj62r5C5DMKMcwJj2ry6TdF5GzpBo6"
 
 [registry]
 url = "https://api.apr.dev"

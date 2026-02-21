@@ -1,0 +1,12 @@
+{
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.cargo.target": "aarch64-apple-darwin",
+  "rust-analyzer.cargo.extraEnv": {
+    "CARGO_BUILD_SBF": "0"
+  },
+  "rust-analyzer.cargo.features": ["no-entrypoint"],
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.procMacro.ignored": {
+    "anchor-lang": ["account", "program"]
+  }
+}

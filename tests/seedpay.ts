@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { SeedpayTemp } from "../target/types/seedpay_temp";
+import { SeedpayTemp } from "../target/types/seedpay";
 
 describe("seedpay", () => {
   // Configure the client to use the local cluster.
