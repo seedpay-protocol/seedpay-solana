@@ -25,7 +25,8 @@ pub mod seedpay {
             timeout_seconds
         )
     }
-}
 
-#[derive(Accounts)]
-pub struct Initialize {}
+    pub fn timeout_close(ctx: Context<TimeoutClose>) -> Result<()> {
+        instructions::timeout_close::timeout_close_handler(ctx)
+    }
+}

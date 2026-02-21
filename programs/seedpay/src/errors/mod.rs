@@ -10,4 +10,13 @@ pub enum SeedPayError {
 
     #[msg("Timeout duration too long (maximum 604800 seconds")]
     TimeoutTooLong,
+
+    #[msg("Unauthorized: caller is not the channel leecher")]
+    UnauthorizedLeecher,
+
+     #[msg("Channel is not in Open status")]
+    ChannelNotOpen,
+
+    #[msg("Timeout has not passed")]
+    TimeoutNotReached,
 }
