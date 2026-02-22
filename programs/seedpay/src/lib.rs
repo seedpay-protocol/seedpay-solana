@@ -6,7 +6,7 @@ pub mod state;
 
 use instructions::*;
 
-declare_id!("F4N3pehAbyRhvHWj62r5C5DMKMcwJj2ry6TdF5GzpBo6");
+declare_id!("7DwPMoGzTjRUroE47VPEEJn4FBSypAA5dbeMn3ocVdsS");
 
 #[program]
 pub mod seedpay {
