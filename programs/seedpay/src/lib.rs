@@ -29,4 +29,8 @@ pub mod seedpay {
     pub fn timeout_close(ctx: Context<TimeoutClose>) -> Result<()> {
         instructions::timeout_close::timeout_close_handler(ctx)
     }
+
+    pub fn close_channel(ctx: Context<CloseChannel>, amount: u64, nonce: u64) -> Result<()> {
+        instructions::close_channel::close_channel_handler(ctx, amount, nonce)
+    }
 }
