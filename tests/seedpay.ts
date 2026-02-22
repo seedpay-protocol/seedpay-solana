@@ -1,11 +1,24 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { before, describe, it } from "mocha";
-import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
+import { Ed25519Program, Keypair, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { Seedpay } from "../target/types/seedpay";
 import * as crypto from "crypto";
-import { createAccount, createMint, getAccount, mintTo } from "@solana/spl-token";
+import {
+  ACCOUNT_SIZE,
+  createAccount,
+  createInitializeAccountInstruction,
+  createInitializeMint2Instruction,
+  createMint,
+  createMintToInstruction,
+  getAccount,
+  MINT_SIZE,
+  mintTo,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import { assert } from "chai";
+import { startAnchor, BankrunProvider } from "anchor-bankrun";
+import { Clock } from "solana-bankrun";
 
 describe("seedpay", () => {
   const provider = anchor.AnchorProvider.env();
@@ -168,6 +181,159 @@ describe("seedpay", () => {
 
     try {
       await getAccount(connection, escrowPda);
+      assert.fail("Escrow should be closed");
+    } catch {
+      // expected: TokenAccountNotFoundError
+    }
+  });
+});
+
+describe("seedpay - timeout_close", () => {
+  const USDC_DECIMALS = 6;
+  const DEPOSIT_AMOUNT = 1_000_000;
+  const TIMEOUT_SECONDS = 3600;
+
+  const channelId = Array.from(crypto.randomBytes(32));
+
+  let provider: BankrunProvider;
+  let program: Program<Seedpay>;
+  let context: Awaited<ReturnType<typeof startAnchor>>;
+
+  let leecher: anchor.Wallet;
+  let seeder: Keypair;
+  let usdcMint: PublicKey;
+  let leecherTokenAccount: PublicKey;
+  let channelStatePda: PublicKey;
+  let escrowPda: PublicKey;
+
+  before(async () => {
+    context = await startAnchor(".", [], []);
+    provider = new BankrunProvider(context);
+    anchor.setProvider(provider);
+    program = new Program<Seedpay>(
+      anchor.workspace.seedpay.idl,
+      provider,
+    );
+
+    leecher = provider.wallet as anchor.Wallet;
+    seeder = Keypair.generate();
+
+    const rent = await context.banksClient.getRent();
+
+    // create mint
+    const mintKeypair = Keypair.generate();
+    usdcMint = mintKeypair.publicKey;
+    const createMintTx = new Transaction().add(
+      SystemProgram.createAccount({
+        fromPubkey: leecher.publicKey,
+        newAccountPubkey: usdcMint,
+        space: MINT_SIZE,
+        lamports: Number(rent.minimumBalance(BigInt(MINT_SIZE))),
+        programId: TOKEN_PROGRAM_ID,
+      }),
+      createInitializeMint2Instruction(usdcMint, USDC_DECIMALS, leecher.publicKey, null),
+    );
+    await provider.sendAndConfirm!(createMintTx, [mintKeypair]);
+
+    // create leecher token account
+    const leecherAtaKeypair = Keypair.generate();
+    leecherTokenAccount = leecherAtaKeypair.publicKey;
+    const createAtaTx = new Transaction().add(
+      SystemProgram.createAccount({
+        fromPubkey: leecher.publicKey,
+        newAccountPubkey: leecherTokenAccount,
+        space: ACCOUNT_SIZE,
+        lamports: Number(rent.minimumBalance(BigInt(ACCOUNT_SIZE))),
+        programId: TOKEN_PROGRAM_ID,
+      }),
+      createInitializeAccountInstruction(leecherTokenAccount, usdcMint, leecher.publicKey),
+    );
+    await provider.sendAndConfirm!(createAtaTx, [leecherAtaKeypair]);
+
+    // mint USDC to leecher
+    const mintToTx = new Transaction().add(
+      createMintToInstruction(usdcMint, leecherTokenAccount, leecher.publicKey, 100 * 10 ** USDC_DECIMALS),
+    );
+    await provider.sendAndConfirm!(mintToTx, []);
+
+    [channelStatePda] = PublicKey.findProgramAddressSync(
+      [Buffer.from("channel"), leecher.publicKey.toBuffer(), seeder.publicKey.toBuffer(), Buffer.from(channelId)],
+      program.programId,
+    );
+
+    [escrowPda] = PublicKey.findProgramAddressSync(
+      [Buffer.from("escrow"), channelStatePda.toBuffer()],
+      program.programId,
+    );
+
+    await program.methods
+      .openChannel(channelId, new anchor.BN(DEPOSIT_AMOUNT), new anchor.BN(TIMEOUT_SECONDS))
+      .accounts({
+        leecher: leecher.publicKey,
+        seeder: seeder.publicKey,
+        leecherTokenAccount,
+        mint: usdcMint,
+      })
+      .rpc();
+  });
+
+  it("rejects timeout_close before timeout", async () => {
+    try {
+      await program.methods
+        .timeoutClose()
+        .accountsPartial({
+          leecher: leecher.publicKey,
+          channelState: channelStatePda,
+          leecherTokenAccount,
+        })
+        .rpc();
+      assert.fail("Should have rejected early timeout_close");
+    } catch (err: any) {
+      assert.include(err.message, "Timeout has not passed");
+    }
+  });
+
+  it("refunds leecher after timeout", async () => {
+    const leecherBefore = await getAccount(provider.connection, leecherTokenAccount);
+
+    // warp clock and slot past the timeout
+    const clock = await context.banksClient.getClock();
+    const warpedSlot = clock.slot + BigInt(TIMEOUT_SECONDS * 2);
+    context.warpToSlot(warpedSlot);
+    const newClock = new Clock(
+      warpedSlot,
+      clock.epochStartTimestamp,
+      clock.epoch,
+      clock.leaderScheduleEpoch,
+      clock.unixTimestamp + BigInt(TIMEOUT_SECONDS + 1),
+    );
+    context.setClock(newClock);
+
+    await program.methods
+      .timeoutClose()
+      .accountsPartial({
+        leecher: leecher.publicKey,
+        channelState: channelStatePda,
+        leecherTokenAccount,
+      })
+      .rpc();
+
+    const leecherAfter = await getAccount(provider.connection, leecherTokenAccount);
+    assert.equal(
+      Number(leecherAfter.amount) - Number(leecherBefore.amount),
+      DEPOSIT_AMOUNT,
+    );
+
+    // channel state and escrow should be closed
+    try {
+      await program.account.channelState.fetch(channelStatePda);
+      assert.fail("Channel state should be closed");
+    } catch (err: any) {
+      assert.ok(err.message !== "Channel state should be closed");
+    }
+
+    try {
+      await getAccount(provider.connection, escrowPda);
       assert.fail("Escrow should be closed");
     } catch {
       // expected: TokenAccountNotFoundError
