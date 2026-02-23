@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "sync-idl": "cp ../../target/types/seedpay.ts src/idl/seedpay.ts",
     "build": "tsc",
     "test": "NODE_OPTIONS='--import tsx' mocha __tests__/**/*.ts"
   },
