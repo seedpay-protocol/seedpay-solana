@@ -3,7 +3,8 @@
   "scripts": {
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-    "demo": "ANCHOR_PROVIDER_URL=http://127.0.0.1:8899 ANCHOR_WALLET=~/.config/solana/id.json tsx packages/demo/src/run.ts"
+    "demo": "ANCHOR_PROVIDER_URL=http://127.0.0.1:8899 ANCHOR_WALLET=~/.config/solana/id.json tsx packages/demo/src/run.ts",
+    "demo:devnet": "./scripts/demo.sh"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
