@@ -1,24 +1,17 @@
 {
-  "name": "@seedpay/sdk",
+  "name": "@seedpay/bittorrent",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
+  "description": "BitTorrent BEP 10 extension adapter for SeedPay",
+  "main": "dist/index.js",
   "scripts": {
-    "sync-idl": "cp ../../target/types/seedpay.ts src/idl/seedpay.ts",
     "build": "tsc",
     "test": "NODE_OPTIONS='--import tsx' mocha __tests__/**/*.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.20.0",
   "dependencies": {
-    "@coral-xyz/anchor": "^0.32.1",
-    "@noble/curves": "^2.0.1",
-    "@noble/hashes": "^2.0.1",
-    "@solana/spl-token": "^0.4.14",
-    "@solana/web3.js": "^1.98.4",
-    "tweetnacl": "^1.0.3"
+    "@seedpay/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/chai": "^4.3.20",
@@ -26,6 +19,7 @@
     "chai": "^4.5.0",
     "mocha": "^11.7.5",
     "tsx": "^4.21.0",
+    "tweetnacl": "^1.0.3",
     "typescript": "^5.9.3"
   }
 }
