@@ -4,6 +4,7 @@ use anchor_spl::token::{close_account, transfer, CloseAccount, Token, TokenAccou
 use solana_sdk_ids::ed25519_program;
 
 use crate::errors::SeedPayError;
+use crate::events::ChannelClosed;
 use crate::state::*;
 
 #[derive(Accounts)]
@@ -142,7 +143,14 @@ pub fn close_channel_handler(ctx: Context<CloseChannel>, amount: u64, nonce: u64
     channel.last_nonce = nonce;
     channel.status = ChannelStatus::Closed;
 
-    msg!("Channel closed: seeder earned {}, leecher refunded {}", amount, refund);
+    emit!(ChannelClosed {
+        leecher: channel.leecher,
+        seeder: channel.seeder,
+        channel_id: channel.channel_id,
+        seeder_earned: amount,
+        leecher_refunded: refund,
+        nonce,
+    });
 
     Ok(())
 }

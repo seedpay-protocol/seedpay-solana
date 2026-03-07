@@ -462,7 +462,7 @@ describe("seedpay - error cases", () => {
         .rpc();
       assert.fail("Should have rejected");
     } catch (err: any) {
-      assert.include(err.message, "Deposite amount must be greater than zero");
+      assert.include(err.message, "Deposit amount must be greater than zero");
     }
   });
 
@@ -712,5 +712,201 @@ describe("seedpay - error cases", () => {
       // channel_state account was deleted by close = leecher
       assert.ok(err.message !== "Should have rejected");
     }
+  });
+
+  // ── edge case: close_channel on already-closed channel ──
+
+  it("close_channel: rejects double close (account deleted after first close)", async () => {
+    const { channelId, channelStatePda } = await openChannel();
+
+    const msg = buildCheck(channelId, 500_000, 1);
+    const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
+      privateKey: leecher.payer.secretKey,
+      message: Uint8Array.from(msg),
+    });
+
+    // first close succeeds
+    await program.methods
+      .closeChannel(new anchor.BN(500_000), new anchor.BN(1))
+      .accountsPartial({
+        seeder: seeder.publicKey,
+        leecher: leecher.publicKey,
+        channelState: channelStatePda,
+        seederTokenAccount,
+        leecherTokenAccount,
+      })
+      .preInstructions([ed25519Ix])
+      .signers([seeder])
+      .rpc();
+
+    // advance slot for fresh blockhash
+    const clock = await context.banksClient.getClock();
+    context.warpToSlot(clock.slot + BigInt(100));
+
+    // second close should fail (account deleted)
+    const msg2 = buildCheck(channelId, 600_000, 2);
+    const ed25519Ix2 = Ed25519Program.createInstructionWithPrivateKey({
+      privateKey: leecher.payer.secretKey,
+      message: Uint8Array.from(msg2),
+    });
+
+    try {
+      await program.methods
+        .closeChannel(new anchor.BN(600_000), new anchor.BN(2))
+        .accountsPartial({
+          seeder: seeder.publicKey,
+          leecher: leecher.publicKey,
+          channelState: channelStatePda,
+          seederTokenAccount,
+          leecherTokenAccount,
+        })
+        .preInstructions([ed25519Ix2])
+        .signers([seeder])
+        .rpc();
+      assert.fail("Should have rejected");
+    } catch (err: any) {
+      assert.ok(err.message !== "Should have rejected");
+    }
+  });
+
+  // ── edge case: zero-amount close ──
+
+  it("close_channel: zero amount close returns full deposit to leecher", async () => {
+    const { channelId, channelStatePda } = await openChannel();
+
+    const leecherBefore = await getAccount(provider.connection, leecherTokenAccount);
+    const seederBefore = await getAccount(provider.connection, seederTokenAccount);
+
+    const msg = buildCheck(channelId, 0, 1);
+    const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
+      privateKey: leecher.payer.secretKey,
+      message: Uint8Array.from(msg),
+    });
+
+    await program.methods
+      .closeChannel(new anchor.BN(0), new anchor.BN(1))
+      .accountsPartial({
+        seeder: seeder.publicKey,
+        leecher: leecher.publicKey,
+        channelState: channelStatePda,
+        seederTokenAccount,
+        leecherTokenAccount,
+      })
+      .preInstructions([ed25519Ix])
+      .signers([seeder])
+      .rpc();
+
+    const leecherAfter = await getAccount(provider.connection, leecherTokenAccount);
+    const seederAfter = await getAccount(provider.connection, seederTokenAccount);
+
+    // seeder earned nothing
+    assert.equal(Number(seederAfter.amount) - Number(seederBefore.amount), 0);
+    // leecher got full deposit back
+    assert.equal(Number(leecherAfter.amount) - Number(leecherBefore.amount), DEPOSIT_AMOUNT);
+  });
+
+  // ── edge case: full-deposit close ──
+
+  it("close_channel: full deposit claim sends everything to seeder", async () => {
+    const { channelId, channelStatePda } = await openChannel();
+
+    const leecherBefore = await getAccount(provider.connection, leecherTokenAccount);
+    const seederBefore = await getAccount(provider.connection, seederTokenAccount);
+
+    const msg = buildCheck(channelId, DEPOSIT_AMOUNT, 1);
+    const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
+      privateKey: leecher.payer.secretKey,
+      message: Uint8Array.from(msg),
+    });
+
+    await program.methods
+      .closeChannel(new anchor.BN(DEPOSIT_AMOUNT), new anchor.BN(1))
+      .accountsPartial({
+        seeder: seeder.publicKey,
+        leecher: leecher.publicKey,
+        channelState: channelStatePda,
+        seederTokenAccount,
+        leecherTokenAccount,
+      })
+      .preInstructions([ed25519Ix])
+      .signers([seeder])
+      .rpc();
+
+    const leecherAfter = await getAccount(provider.connection, leecherTokenAccount);
+    const seederAfter = await getAccount(provider.connection, seederTokenAccount);
+
+    // seeder got full deposit
+    assert.equal(Number(seederAfter.amount) - Number(seederBefore.amount), DEPOSIT_AMOUNT);
+    // leecher refund is zero
+    assert.equal(Number(leecherAfter.amount) - Number(leecherBefore.amount), 0);
+  });
+
+  // ── edge case: seeder tries timeout_close ──
+
+  it("timeout_close: rejects when seeder tries to force-close", async () => {
+    const { channelStatePda } = await openChannel();
+
+    // warp past timeout
+    const clock = await context.banksClient.getClock();
+    const warpedSlot = clock.slot + BigInt(TIMEOUT_SECONDS * 2);
+    context.warpToSlot(warpedSlot);
+    context.setClock(
+      new Clock(warpedSlot, clock.epochStartTimestamp, clock.epoch, clock.leaderScheduleEpoch, clock.unixTimestamp + BigInt(TIMEOUT_SECONDS + 1)),
+    );
+
+    try {
+      await program.methods
+        .timeoutClose()
+        .accountsPartial({
+          leecher: seeder.publicKey, // seeder pretending to be leecher
+          channelState: channelStatePda,
+          leecherTokenAccount: seederTokenAccount,
+        })
+        .signers([seeder])
+        .rpc();
+      assert.fail("Should have rejected");
+    } catch (err: any) {
+      // fails due to has_one = leecher or PDA seed mismatch
+      assert.ok(err.message !== "Should have rejected");
+    }
+  });
+
+  // ── edge case: close_channel after timeout has passed ──
+
+  it("close_channel: seeder can still claim with valid check after timeout", async () => {
+    const { channelId, channelStatePda } = await openChannel();
+
+    // warp past timeout
+    const clock = await context.banksClient.getClock();
+    const warpedSlot = clock.slot + BigInt(TIMEOUT_SECONDS * 2);
+    context.warpToSlot(warpedSlot);
+    context.setClock(
+      new Clock(warpedSlot, clock.epochStartTimestamp, clock.epoch, clock.leaderScheduleEpoch, clock.unixTimestamp + BigInt(TIMEOUT_SECONDS + 1)),
+    );
+
+    const seederBefore = await getAccount(provider.connection, seederTokenAccount);
+
+    const msg = buildCheck(channelId, 500_000, 1);
+    const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
+      privateKey: leecher.payer.secretKey,
+      message: Uint8Array.from(msg),
+    });
+
+    // seeder can still close_channel with a valid check even after timeout
+    await program.methods
+      .closeChannel(new anchor.BN(500_000), new anchor.BN(1))
+      .accountsPartial({
+        seeder: seeder.publicKey,
+        leecher: leecher.publicKey,
+        channelState: channelStatePda,
+        seederTokenAccount,
+        leecherTokenAccount,
+      })
+      .preInstructions([ed25519Ix])
+      .signers([seeder])
+      .rpc();
+
+    const seederAfter = await getAccount(provider.connection, seederTokenAccount);
+    assert.equal(Number(seederAfter.amount) - Number(seederBefore.amount), 500_000);
   });
 });

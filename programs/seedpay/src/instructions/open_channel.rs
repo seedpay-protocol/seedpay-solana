@@ -3,11 +3,12 @@ use anchor_spl::token::{Token, TokenAccount, Mint, Transfer, transfer};
 
 use crate::state::*;
 use crate::errors::SeedPayError;
+use crate::events::ChannelOpened;
 
 #[derive(Accounts)]
 #[instruction(channel_id: [u8; 32])]
 pub struct OpenChannel<'info> {
-    // leecher opens the channel. Pays for account creation and deposites USDC.
+    // leecher opens the channel. Pays for account creation and deposits USDC.
     #[account(mut)]
     pub leecher: Signer<'info>,
 
@@ -95,9 +96,13 @@ pub fn open_channel_handler(
     );
     transfer(transfer_ctx, amount)?;
 
-    msg!("Channel opened: {} USDC deposited", amount);
-    msg!("Channel IDL {:?}", channel_id);
-    msg!("Timeout: {}", timeout_seconds);
+    emit!(ChannelOpened {
+        leecher: ctx.accounts.leecher.key(),
+        seeder: ctx.accounts.seeder.key(),
+        channel_id,
+        deposited: amount,
+        timeout: ctx.accounts.channel_state.timeout,
+    });
 
     Ok(())
 }

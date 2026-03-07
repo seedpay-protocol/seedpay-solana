@@ -3,6 +3,7 @@ use anchor_spl::token::{Token, TokenAccount, Transfer, transfer, CloseAccount, c
 
 use crate::state::*;
 use crate::errors::SeedPayError;
+use crate::events::ChannelTimedOut;
 
 #[derive(Accounts)]
 pub struct TimeoutClose<'info> {
@@ -91,9 +92,15 @@ pub fn timeout_close_handler(ctx: Context<TimeoutClose>) -> Result<()> {
     close_account(close_ctx)?;
 
     // update status (channel_state account is closed by `close = leecher` at exit)
-    ctx.accounts.channel_state.status = ChannelStatus::TimedOut;
+    let channel = &mut ctx.accounts.channel_state;
+    channel.status = ChannelStatus::TimedOut;
 
-    msg!("Channel timed out: {} tokens refunded to leecher", refund_amount);
+    emit!(ChannelTimedOut {
+        leecher: channel.leecher,
+        seeder: channel.seeder,
+        channel_id: channel.channel_id,
+        refunded: refund_amount,
+    });
 
     Ok(())
 }
