@@ -43,11 +43,15 @@ describe("seedpay", () => {
   let escrowPda: PublicKey;
 
   before(async () => {
-    const airdropSig = await connection.requestAirdrop(
-      seeder.publicKey,
-      2 * anchor.web3.LAMPORTS_PER_SOL,
-    );
-    await connection.confirmTransaction(airdropSig);
+    try {
+      const airdropSig = await connection.requestAirdrop(
+        seeder.publicKey,
+        2 * anchor.web3.LAMPORTS_PER_SOL,
+      );
+      await connection.confirmTransaction(airdropSig);
+    } catch {
+      // airdrop may fail on devnet due to rate limits; continue anyway
+    }
 
     usdcMint = await createMint(
       connection,
