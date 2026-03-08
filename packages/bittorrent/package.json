@@ -2,7 +2,7 @@
   "name": "@seedpay/bittorrent",
   "version": "1.0.0",
   "description": "BitTorrent BEP 10 extension adapter for SeedPay",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "NODE_OPTIONS='--import tsx' mocha __tests__/**/*.ts"

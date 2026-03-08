@@ -1,0 +1,30 @@
+{
+  "name": "@seedpay/cli",
+  "version": "1.0.0",
+  "description": "SeedPay CLI - Paid BitTorrent seeding on Solana",
+  "bin": {
+    "seedpay": "./dist/bin.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/bin.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@seedpay/sdk": "workspace:*",
+    "@seedpay/bittorrent": "workspace:*",
+    "@coral-xyz/anchor": "^0.32.1",
+    "@solana/web3.js": "^1.98.4",
+    "@solana/spl-token": "^0.4.14",
+    "commander": "^12.0.0",
+    "webtorrent": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

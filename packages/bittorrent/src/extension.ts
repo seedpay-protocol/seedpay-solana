@@ -37,20 +37,23 @@ export const createHandshakeMetadata = (
   chain: meta.chain,
 });
 
+// Bencode may deliver strings as Buffers — coerce to string
+const toStr = (v: unknown): string | null => {
+  if (typeof v === "string") return v;
+  if (Buffer.isBuffer(v)) return v.toString("utf-8");
+  if (v instanceof Uint8Array) return Buffer.from(v).toString("utf-8");
+  return null;
+};
+
 export const parseHandshakeMetadata = (
   dict: Record<string, unknown>,
 ): HandshakeMetadata | null => {
-  const wallet = dict.wallet;
-  const pricePerMb = dict.price_per_mb;
-  const minPrepayment = dict.min_prepayment;
-  const chain = dict.chain;
+  const wallet = toStr(dict.wallet);
+  const pricePerMb = toStr(dict.price_per_mb);
+  const minPrepayment = toStr(dict.min_prepayment);
+  const chain = toStr(dict.chain);
 
-  if (
-    typeof wallet !== "string" ||
-    typeof pricePerMb !== "string" ||
-    typeof minPrepayment !== "string" ||
-    typeof chain !== "string"
-  ) {
+  if (!wallet || !pricePerMb || !minPrepayment || !chain) {
     return null;
   }
 
