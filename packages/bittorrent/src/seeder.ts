@@ -14,8 +14,14 @@ import {
 } from "./extension";
 import type { PeerTransport } from "./transport";
 
+export interface VerifiedChannel {
+  valid: boolean;
+  leecherPubkey?: Uint8Array;
+  deposited?: bigint;
+}
+
 export interface ChannelVerifier {
-  verifyChannel(channelId: Uint8Array, txSignature: string): Promise<boolean>;
+  verifyChannel(channelId: Uint8Array, txSignature: string): Promise<VerifiedChannel>;
   closeChannel(channelId: Uint8Array, check: {
     channelId: Uint8Array;
     amount: bigint;
@@ -78,14 +84,7 @@ export class SeederController {
         break;
       }
       case "channel_opened": {
-        const leecherPublicKey = this.remoteMeta
-          ? new TextEncoder().encode(this.remoteMeta.wallet)
-          : new Uint8Array(32);
-        const actions = this.session.onChannelOpened(
-          msg.txSignature,
-          msg.deposited,
-          leecherPublicKey,
-        );
+        const actions = this.session.onChannelOpened(msg.txSignature);
         await this.executeActions(actions);
         break;
       }
@@ -106,13 +105,10 @@ export class SeederController {
 
   onPieceRequest(pieceLength: bigint): { serve: boolean } {
     const actions = this.session.onPieceRequested(pieceLength);
-    // If payment_check_required is returned, send it but still serve
-    // The caller decides policy on whether to block
     const hasPaymentRequired = actions.some(
       (a) => a.action === "send_message" && a.message.type === "payment_check_required",
     );
 
-    // Send any messages synchronously
     for (const action of actions) {
       if (action.action === "send_message") {
         this.sendMessage(action);
@@ -124,11 +120,6 @@ export class SeederController {
 
   async onDisconnect(): Promise<void> {
     const actions = this.session.onDisconnect();
-    await this.executeActions(actions);
-  }
-
-  async confirmChannel(): Promise<void> {
-    const actions = this.session.confirmChannel();
     await this.executeActions(actions);
   }
 
@@ -147,12 +138,18 @@ export class SeederController {
           this.sendMessage(action);
           break;
         case "verify_channel": {
-          const valid = await this.verifier.verifyChannel(
+          const result = await this.verifier.verifyChannel(
             action.channelId,
             action.txSignature,
           );
-          if (valid) {
-            await this.confirmChannel();
+          if (result.valid && result.leecherPubkey && result.deposited !== undefined) {
+            const confirmActions = this.session.confirmChannel(
+              result.deposited,
+              result.leecherPubkey,
+            );
+            for (const a of confirmActions) {
+              if (a.action === "send_message") this.sendMessage(a);
+            }
           } else {
             const rejectActions = this.session.rejectChannel("Channel verification failed");
             for (const a of rejectActions) {

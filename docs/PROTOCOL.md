@@ -16,6 +16,8 @@
 > 2. **Payment Channels**: Unidirectional payment channels with streaming micropayments enable fair exchange and low transaction costs.
 > 3. **Simplified Protocol**: Focus on crypto-native users with direct payments. Ratio credits system dropped in favor of simpler implementation.
 >
+> **Implementation Status:** On-chain program deployed to Solana devnet. SDK with ECDH, payment checks, protocol messages, session state machines, and accounting. BitTorrent BEP 10 adapter package with seeder/leecher controllers. See [ROADMAP.md](./ROADMAP.md) for next steps.
+>
 > **This is research software. Do not use in production.**
 >
 > See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to provide feedback.
@@ -238,7 +240,7 @@ Before creating the payment transaction, both peers establish a shared secret us
    ```json
    {
      "type": "ecdh_init",
-     "ephemeral_pk": "<32-byte-public-key-hex>"
+     "publicKey": "<32-byte-public-key-hex>"
    }
    ```
 
@@ -307,12 +309,7 @@ To start a paid session, the Leecher opens a unidirectional payment channel by d
 The transaction creates a payment channel with the following properties:
 
 ```
-channel_id = SHA-256(
-  leecher_wallet_address ||
-  seeder_wallet_address ||
-  timestamp ||
-  nonce
-)
+channel_id = SHA-256(Session_UUID)
 
 channel_state = {
   leecher: <leecher_wallet_address>
@@ -329,7 +326,7 @@ channel_state = {
 
 **Channel ID Derivation:**
 
-The `channel_id` MUST be deterministically derivable from on-chain data (wallet addresses, timestamp, nonce) so that the smart contract can create and lookup channels without requiring the Session_UUID. The session binding for privacy is handled separately via the memo's `session_hash` field (see Section 3.3.2).
+The `channel_id` is derived from the `Session_UUID` established during ECDH key exchange (Section 3.2.1): `channel_id = SHA-256(Session_UUID)`. This ensures the channel is cryptographically bound to the specific session. On-chain, the channel account is addressed using a Program Derived Address (PDA) seeded by `(leecher, seeder, channel_id)`, ensuring uniqueness and deterministic lookup.
 
 **Memo Format (Privacy-Preserving):**
 
@@ -366,19 +363,19 @@ After the channel opening transaction is confirmed on-chain, the Leecher sends a
 ```json
 {
   "type": "channel_opened",
-  "tx_signature": "<transaction_signature>",
-  "channel_id": "<channel_identifier>",
-  "amount": 0.01,
-  "timestamp": 1702700000000
+  "channelId": "<channel_identifier_hex>",
+  "txSignature": "<transaction_signature>",
+  "deposited": "10000",
+  "timeout": "3600"
 }
 ```
 
-- `tx_signature`: the blockchain transaction signature of the channel opening
-- `channel_id`: the channel identifier (for reference, not trusted)
-- `amount`: the deposited amount (for UI/logging purposes only, not trusted by Seeder)
-- `timestamp`: when the notification was created (for freshness checks)
+- `txSignature`: the blockchain transaction signature of the channel opening
+- `channelId`: the channel identifier as hex string (for reference, not trusted)
+- `deposited`: the deposited amount as string (for UI/logging purposes only, not trusted by Seeder)
+- `timeout`: the timeout in seconds as string (for UI/logging purposes only, not trusted by Seeder)
 
-**Important:** The Seeder MUST NOT rely on the `amount` field or any other client-provided data. All validation is done against the on-chain channel state.
+**Important:** The Seeder MUST NOT rely on the `deposited`, `timeout`, or any other client-provided data. All validation is done against the on-chain channel state.
 
 A Seeder that receives a `channel_opened` message MUST NOT start sending pieces yet. Instead, it proceeds to the Verification Phase (Section 3.3) to verify the channel on-chain.
 
@@ -401,33 +398,23 @@ Each payment check is a signed message containing:
 
 Where:
 
-- `channel_id`: identifies which payment channel this check belongs to
-- `amount`: cumulative amount authorized (in token units, e.g. USDC)
-- `nonce`: monotonically increasing sequence number (prevents replay)
-- `signature`: Ed25519 signature over `channel_id || amount || nonce` using the Leecher's wallet key
+- `channel_id`: identifies which payment channel this check belongs to (32 bytes)
+- `amount`: cumulative amount authorized (in token base units, e.g. USDC micro-units as u64)
+- `nonce`: monotonically increasing sequence number (prevents replay, u64)
+- `signature`: Ed25519 signature over the canonical message using the Leecher's wallet key
 
 **Payment Check Signing:**
 
-The payment check MUST use structured encoding to prevent ambiguity and collision attacks:
+The payment check uses a fixed 48-byte binary encoding:
 
 ```
-// Option 1: Structured binary encoding (recommended)
-payment_check_data = {
-  channel_id: [u8; 32],
-  amount: u64,
-  nonce: u64
-}
-message = serialize(payment_check_data)  // e.g., Borsh, CBOR, or Protocol Buffers
-message_hash = SHA-256(message)
-signature = ed25519_sign(leecher_private_key, message_hash)
-
-// Option 2: Delimited string encoding (alternative)
-message = channel_id + ":" + amount.to_string() + ":" + nonce.to_string()
-message_hash = SHA-256(message)
-signature = ed25519_sign(leecher_private_key, message_hash)
+message = channel_id (32 bytes) || amount (u64 LE, 8 bytes) || nonce (u64 LE, 8 bytes)
+signature = ed25519_sign_detached(leecher_private_key, message)
 ```
 
-**Important:** The signature MUST be computed over a hash of the message, not the raw message, to ensure consistent signature length and prevent length extension attacks.
+Ed25519 internally hashes the message before signing (`SHA-512` per RFC 8032), so no separate hash step is needed. The fixed-length binary format prevents ambiguity and collision attacks.
+
+The on-chain program verifies payment checks using Solana's Ed25519 SigVerify precompile, which performs the same `ed25519_verify(pubkey, message, signature)` operation.
 
 **Sending Payment Checks:**
 
@@ -446,12 +433,14 @@ The Leecher SHOULD send checks proactively rather than waiting for `payment_chec
 ```json
 {
   "type": "payment_check",
-  "channel_id": "<channel_identifier>",
-  "amount": 0.005,
-  "nonce": 1,
-  "signature": "<base64_encoded_signature>"
+  "channelId": "<channel_identifier_hex>",
+  "amount": "5000",
+  "nonce": "1",
+  "signature": "<signature_hex>"
 }
 ```
+
+Note: `amount` and `nonce` are serialized as strings (BigInt values). `channelId` and `signature` are hex-encoded byte arrays.
 
 **Payment Check Validation:**
 
@@ -533,10 +522,8 @@ After a channel is closed (either cooperatively or via timeout), the closing par
 ```json
 {
   "type": "channel_closed",
-  "channel_id": "<channel_identifier>",
-  "tx_signature": "<closing_transaction_signature>",
-  "final_amount": 0.005,
-  "reason": "cooperative" | "timeout"
+  "channelId": "<channel_identifier_hex>",
+  "txSignature": "<closing_transaction_signature>"
 }
 ```
 
@@ -646,11 +633,7 @@ After running the validation checks, the Seeder responds over the SeedPay extens
    ```json
    {
      "type": "channel_confirmed",
-     "confirmed": true,
-     "channel_id": "<channel_identifier>",
-     "deposit": 0.01,
-     "price_per_mb": 0.0001,
-     "timeout": 1702703600000
+     "channelId": "<channel_identifier_hex>"
    }
    ```
 
@@ -663,14 +646,12 @@ After running the validation checks, the Seeder responds over the SeedPay extens
    ```json
    {
      "type": "channel_rejected",
-     "confirmed": false,
-     "reason": "tx_not_found" | "tx_failed" | "wrong_seeder" |
-               "insufficient_deposit" | "session_mismatch" | "replayed_channel" |
-               "expired" | "invalid_channel_state"
+     "channelId": "<channel_identifier_hex>",
+     "reason": "Channel verification failed"
    }
    ```
 
-   Note: `"session_mismatch"` replaces `"memo_mismatch"` from v0.1 to reflect the new ECDH-based binding.
+   Common rejection reasons: `"Channel verification failed"`, `"Deposit too low"`, `"insufficient_deposit"`, `"session_mismatch"`, `"replayed_channel"`, `"expired"`.
 
 2. Keeps the Leecher **choked**, so no paid pieces are sent for this session.
 3. MAY allow the Leecher to retry with a new channel opening, or MAY close the connection according to local policy.
@@ -730,11 +711,11 @@ If `last_check_amount` is not sufficient:
   ```json
   {
     "type": "payment_check_required",
-    "required_amount": 0.005,
-    "current_check_amount": 0.003,
-    "estimated_remaining_mb": 20.0
+    "amountOwed": "5000"
   }
   ```
+
+  Where `amountOwed` is the cumulative cost owed as a string (BigInt).
 
 - **Handling In-Flight Payment Checks:** Before choking due to insufficient payment, the Seeder SHOULD wait a short grace period (e.g., 5 seconds) to allow any in-flight payment checks to arrive. This prevents unnecessary choke/unchoke cycles when the Leecher is already sending payment checks proactively.
 
@@ -1299,10 +1280,7 @@ _[Draft/TBD - How to implement SeedPay as a BitTorrent client extension, backwar
 ```json
 {
   "type": "payment_check_rejected",
-  "channel_id": "<channel_identifier>",
-  "reason": "invalid_signature" | "stale_nonce" | "amount_exceeds_deposit" | "amount_not_increasing",
-  "expected_nonce": 5,
-  "received_nonce": 3
+  "reason": "Invalid signature" | "Stale nonce" | "Amount exceeds deposit" | "Amount decreased"
 }
 ```
 
@@ -1331,11 +1309,12 @@ _[Draft/TBD - How to implement SeedPay as a BitTorrent client extension, backwar
 ```json
 {
   "type": "channel_timeout_warning",
-  "channel_id": "<channel_identifier>",
-  "timeout_in_seconds": 3600,
-  "recommended_action": "open_new_channel" | "extend_timeout"
+  "channelId": "<channel_identifier_hex>",
+  "timeoutAt": "1700000000"
 }
 ```
+
+Where `timeoutAt` is the Unix timestamp when the channel times out, as a string (BigInt).
 
 #### 6.5.5 Transaction Failures
 
@@ -1454,9 +1433,36 @@ _[Draft/TBD - Seeder reputation, leecher trust scores]_
 
 **Changelog:**
 
+- **v0.3.1 (2026-03-08)**: Updated wire message formats to match implementation (camelCase field names, BigInt as strings, Uint8Array as hex). Fixed channel_id derivation to use `SHA-256(Session_UUID)` consistently. Clarified Ed25519 payment check signing (48-byte binary message, no separate hash). Added implementation status.
 - **v0.3 (2026-01-04)**: Dropped ratio credits system in favor of simplified protocol focused on crypto-native users. Protocol now uses direct payments via payment channels only. Users can still participate in circular economy by earning USDC through seeding and spending it on downloads.
 - **v0.2 (2025-12-21)**: Introduced ECDH-based ephemeral session keys for privacy, removed peer_id from on-chain memos, implemented unidirectional payment channels with off-chain payment checks for streaming micropayments
 - **v0.1 (2025-12-15)**: Initial draft with peer_id-based memo binding (deprecated due to privacy concerns)
+
+---
+
+## Appendix A: Implementation Reference
+
+The reference implementation lives in the [seedpay-solana](https://github.com/seedpay/seedpay-solana) repository:
+
+| Spec Section | Implementation | Package |
+|---|---|---|
+| 3.1 Handshake (BEP 10) | `extension.ts` — `ExtensionNegotiator`, `HandshakeMetadata` | `@seedpay/bittorrent` |
+| 3.2.1 ECDH Key Exchange | `ecdh.ts` — X25519 + HKDF-SHA256 | `@seedpay/sdk` |
+| 3.2.3-3.2.4 Channel Opening | `session.ts` — `LeecherSession`, `SeederSession` state machines | `@seedpay/sdk` |
+| 3.2.5 Payment Checks | `payment-check.ts` — 48-byte binary encoding, Ed25519 sign/verify | `@seedpay/sdk` |
+| 3.2.6 Channel Closing | `session.ts` — `initiateClose()`, `onDisconnect()` | `@seedpay/sdk` |
+| 3.3 Verification | `seeder.ts` — `ChannelVerifier` interface | `@seedpay/bittorrent` |
+| 3.4 Data Transfer | `accounting.ts` — `PieceAccounting`, `computeCost` | `@seedpay/sdk` |
+| Wire Messages | `messages.ts` — 9 message types, encode/decode | `@seedpay/sdk` |
+| On-Chain Program | `programs/seedpay/` — Anchor program on Solana devnet | On-chain |
+
+**Wire Message Serialization Convention:**
+
+All SeedPay wire messages use a discriminated union on `type` field. At the SDK level, messages are JSON-safe plain objects:
+- `BigInt` values → serialized as strings (e.g., `"1000000"`)
+- `Uint8Array` values → serialized as hex strings (e.g., `"abcd1234..."`)
+
+At the BitTorrent transport layer, messages are bencoded for BEP 10 compatibility.
 
 ---
 

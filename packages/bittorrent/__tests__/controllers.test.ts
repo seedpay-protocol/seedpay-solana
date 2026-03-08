@@ -4,7 +4,7 @@ import { SeederController } from "../src/seeder";
 import { LeecherController } from "../src/leecher";
 import { encodeBep10Message, decodeBep10Message } from "../src/extension";
 import type { PeerTransport } from "../src/transport";
-import type { ChannelVerifier } from "../src/seeder";
+import type { ChannelVerifier, VerifiedChannel } from "../src/seeder";
 import type { ChannelOpener } from "../src/leecher";
 import type { SeedPayMessage } from "@seedpay/sdk";
 
@@ -38,10 +38,19 @@ class MockTransport implements PeerTransport {
 
 class MockVerifier implements ChannelVerifier {
   shouldVerify = true;
+  leecherPubkey: Uint8Array = keypair.publicKey;
+  deposited: bigint = 10_000n;
   closedChannels: Array<{ channelId: Uint8Array; amount: bigint }> = [];
 
-  async verifyChannel(): Promise<boolean> {
-    return this.shouldVerify;
+  async verifyChannel(): Promise<VerifiedChannel> {
+    if (!this.shouldVerify) {
+      return { valid: false };
+    }
+    return {
+      valid: true,
+      leecherPubkey: this.leecherPubkey,
+      deposited: this.deposited,
+    };
   }
 
   async closeChannel(

@@ -256,21 +256,11 @@ export class SeederSession {
     ];
   }
 
-  onChannelOpened(
-    txSignature: string,
-    deposited: bigint,
-    leecherPublicKey: Uint8Array,
-  ): SessionAction[] {
+  onChannelOpened(txSignature: string): SessionAction[] {
     if (this.state !== "handshake") {
       return [{ action: "error", message: `Unexpected channel_opened in state: ${this.state}` }];
     }
-    this.leecherPublicKey = leecherPublicKey;
-    this.channelDeposit = deposited;
     this.state = "channel_pending";
-
-    if (this.config.minDeposit && deposited < this.config.minDeposit) {
-      return this.rejectChannel("Deposit too low");
-    }
 
     return [
       {
@@ -281,10 +271,21 @@ export class SeederSession {
     ];
   }
 
-  confirmChannel(): SessionAction[] {
+  confirmChannel(
+    deposited: bigint,
+    leecherPublicKey: Uint8Array,
+  ): SessionAction[] {
     if (this.state !== "channel_pending") {
       return [{ action: "error", message: `Cannot confirm in state: ${this.state}` }];
     }
+
+    this.channelDeposit = deposited;
+    this.leecherPublicKey = leecherPublicKey;
+
+    if (this.config.minDeposit && deposited < this.config.minDeposit) {
+      return this.rejectChannel("Deposit too low");
+    }
+
     this.state = "active";
     return [
       {
